@@ -1,75 +1,89 @@
 
+import { useState } from 'react'
 
-const Header = (props) => {
-
-  console.log(props)
+const Header = (props) =>{
   return (
     <div>
-        <h1>{props.course}</h1>
+      <h1>{props.text}</h1>
     </div>
   )
 }
 
+const Button = ({handleClick, text}) => <button onClick={handleClick}>{text}</button>
 
-const Part = (props) => {
+const Display = ({text, amount}) => {
   return (
-    <div>
-      <p>
-        {props.part} {props.exercises}
-      </p>
-    </div>
+    <tbody>
+      <tr>
+        <td>{text}</td>
+        <td>{amount}</td>
+      </tr>
+    </tbody>
   )
 }
 
-const Content = (props) => {
-  return (
-    <div>
-      <Part part={props.parts[0].name} exercises={props.parts[0].exercises}/>
-      <Part part={props.parts[1].name} exercises={props.parts[1].exercises}/>
-      <Part part={props.parts[2].name} exercises={props.parts[2].exercises}/>
-    </div>
-    
-  )
-}
+const Statictis = (props) => {
 
-const Total = (props) => {
-  console.log(props)
-  return (
-    <div>
-      <p>Number of exercises {props.parts[0].exercises + props.parts[1].exercises + props.parts[2].exercises}</p>
-    </div>
-  )
-}
-
-
-const App = () => {
-
-  const course = {
-    name: 'Half Stack application development',
-    parts: [
-      {
-        name: 'Fundamentals of React',
-        exercises: 10
-      },
-      {
-        name: 'Using props to pass data',
-        exercises: 7
-      },
-      {
-        name: 'State of a component',
-        exercises: 14
-      }
-    ]
+  if(props.total == 0){
+    return (
+      <div>
+        <Header text={'statistics'} />
+        <p>No feedback given</p>
+      </div>
+    )
   }
 
   return (
     <div>
-      <Header course={course.name} />
-      <Content parts={course.parts} />
-      <Total parts={course.parts} />
+      <Header text={'statistics'} />
+      <table>
+        <Display text={'good'} amount={props.good} />
+        <Display text={'neutral'} amount={props.neutral} />
+        <Display text={'bad'} amount={props.bad} />
+        <Display text={'total'} amount={props.total} />
+        <Display text={'positive'} amount={props.positive} />
+      </table>
     </div>
   )
 }
 
+const App = () => {
+  // guarda los clics de cada botón en su propio estado
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral] = useState(0)
+  const [bad, setBad] = useState(0)
+  const [total, setTotal] = useState(0)
+  let positive = [0, ' %'];
+
+  const handleGoodClick = () => {
+    const updatedGood = good + 1
+    setGood(updatedGood)
+    setTotal(total + 1)
+  }
+  const handleNeutralClick = () => {
+    const updatedNeutral = neutral + 1
+    setNeutral(updatedNeutral)
+    setTotal(total + 1)
+  } 
+  const handleBadClick = () => {
+    const updatedBad = bad + 1
+    setBad(updatedBad)
+    setTotal(total + 1)
+  }
+  
+  if(total>0){
+    positive = [good/total, " %"]
+  }
+
+  return (
+    <div>
+      <Header text={'give feedback'} />
+      <Button handleClick={handleGoodClick} text={'good'} />
+      <Button handleClick={handleNeutralClick} text={'neutral'} />
+      <Button handleClick={handleBadClick} text={'bad'} />
+      <Statictis good={good} neutral={neutral} bad={bad} total={total} positive={positive} />
+    </div>
+  )
+}
 
 export default App
