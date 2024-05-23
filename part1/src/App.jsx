@@ -22,13 +22,15 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
     'The only way to go fast, is to go well.'
   ]
-  if (points.length == 0){
+  if (points.length === 0){
     points = Array(anecdotes.length).fill(0)
   }
   
+  let maxIndexOfPoints = points.indexOf(Math.max(...points))
+
   const [selected, setSelected] = useState(0)
 
-  const handleVoteClick = () =>{
+  const handleVoteClick = () =>{        
     points[selected] += 1  
   }
 
@@ -45,8 +47,8 @@ const App = () => {
       <Button handleClick={handleVoteClick} text={'vote'} />
       <Button handleClick={handleRandomClick} text={'next anecdote'} />
       <Header text={'Anecdote with most votes'} />
-      <div>{anecdotes[points.indexOf(Math.max(...points))]}</div>
-      <div>has {points[points.indexOf(Math.max(...points))]} votes</div>
+      <div>{anecdotes[maxIndexOfPoints]}</div>
+      <div>has {points[maxIndexOfPoints]} votes</div>
     </div>
   )
 }
