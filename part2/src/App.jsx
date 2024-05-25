@@ -1,105 +1,80 @@
 
-// import { useState } from 'react'
-// import Note from './components/Note'
-
-
-// const App = (props) => {
-//   const [notes, setNotes] = useState(props.notes)
-//   const [newNote, setNewNote] = useState('a new note...') 
-//   const [showAll, setShowAll] = useState(true)
-
-//   const addNote = (event) => {
-//     event.preventDefault()
-//     const noteObject = {
-//       content: newNote,
-//       important: Math.random() < 0.5,
-//       id: notes.length + 1,
-//     } 
-
-//     setNotes(notes.concat(noteObject))
-//     setNewNote('')
-//   }
-
-//   const handleNoteChange = (event) => {
-//    setNewNote(event.target.value)  
-//   }
-
-  
-//   const notesToShow = showAll ? notes : notes.filter(note => note.important)
-
-//   return (
-//     <div>
-//       <h1>Notes</h1>
-//       <div>
-//           <button onClick={() => setShowAll(!showAll)}>show {showAll ? 'important' : 'all'}</button>
-//       </div>
-//       <ul>
-//         {notesToShow.map(note =>
-//           <Note key={note.id} note={note} />
-//         )}
-//       </ul>
-//       <form onSubmit={addNote}>
-//         <input value={newNote} onChange={handleNoteChange} />
-//         <button type="submit">save</button>
-//       </form>
-//     </div>
-//   )
-// }
-
-// export default App 
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
-
+import personServices from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
-
-  useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {        
-        setPersons(response.data)
-        setNewPersonsFilter(response.data)
-      })
-  }, [])
-
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
   const [newPersonsFilter, setNewPersonsFilter] = useState(persons)
+  
+  useEffect(() => {
+    personServices
+      .getAll()
+      .then(presonData => {        
+        setPersons(presonData)
+        setNewPersonsFilter(presonData)
+      })
+  }, [])
 
-  const addNewPerson = (event) =>{
+  const addNewPerson = (event) => {
     event.preventDefault()
 
     const updatedPerson = {
-      id: persons.length + 1,
       name: newName,
       number: newNumber
     }
 
-    const namesExists = (persons.map(person => person.name === newName))
-    let nameExist = false
-    namesExists.forEach(value =>{
-      if(value === true){
-        nameExist = true
-      }
-    })
+    const nameExist = (persons.find(person => person.name.toLowerCase() === newName.toLowerCase()))
+    console.log(nameExist)
 
     if(nameExist){
-      alert(`${newName} is already added to phonebook`)
+      if(window.confirm(`${newName} is already added to phonebook, do you want to update the number?`)){
+        personServices
+          .update(nameExist.id, updatedPerson)
+          .then(personData => {
+            personServices
+              .getAll()
+              .then(presonData => {
+                setPersons(presonData)
+                setNewPersonsFilter(presonData)
+              })
+          })
+      }
     }
     else{
-      setPersons(persons.concat(updatedPerson))
-      setNewPersonsFilter(newPersonsFilter.concat(updatedPerson))
+      personServices
+      .create(updatedPerson)
+      .then(personData => {
+        setPersons(persons.concat(personData))
+        setNewPersonsFilter(newPersonsFilter.concat(personData))
+      })
     }
 
     setNewName('')
     setNewNumber('')
     setNewFilter('')
   }
+
+  const deleteOnePerson = (id) => {
+
+    personServices
+      .deletePerson(id)
+      .then(data => {
+        console.log(`${id} eliminado correctamente`)
+        setPersons(persons.filter(person => person.id !== id))
+        setNewPersonsFilter(persons.filter(person => person.id !== id))
+      })
+      .catch(error => {
+        alert(`${id} was already deleted from server`)
+        console.error('error', error)
+      })
+  }
+
 
   const handleNameChange = (event) =>{
     setNewName(event.target.value)
@@ -127,7 +102,7 @@ const App = () => {
 
       <h2>Numbers</h2>
       
-      <Persons newPersonsFilter={newPersonsFilter} />
+      <Persons newPersonsFilter={newPersonsFilter} deletePerson={deleteOnePerson} />
 
     </div>
   )
