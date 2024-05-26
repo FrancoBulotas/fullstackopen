@@ -4,6 +4,8 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import personServices from './services/persons'
+import Notification from './components/Notification'
+
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -11,7 +13,10 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
   const [newPersonsFilter, setNewPersonsFilter] = useState(persons)
-  
+  const [newMessage, setMessage] = useState(null)
+  const [newMessageType, setMessageType] = useState(null)
+
+
   useEffect(() => {
     personServices
       .getAll()
@@ -30,7 +35,6 @@ const App = () => {
     }
 
     const nameExist = (persons.find(person => person.name.toLowerCase() === newName.toLowerCase()))
-    console.log(nameExist)
 
     if(nameExist){
       if(window.confirm(`${newName} is already added to phonebook, do you want to update the number?`)){
@@ -40,9 +44,24 @@ const App = () => {
             personServices
               .getAll()
               .then(presonData => {
+
+                setMessageType('succes')
+                setMessage(`Added ${newName} --- ${newNumber}`)
+                setTimeout(() => {
+                  setMessage(null)        
+                }, 5000)
+
                 setPersons(presonData)
                 setNewPersonsFilter(presonData)
               })
+          })
+          .catch(error => {
+
+            setMessageType('error')
+            setMessage(`Information of ${newName} has already been removed from server`)
+            setTimeout(() => {
+              setMessage(null)
+            }, 5000)
           })
       }
     }
@@ -50,6 +69,13 @@ const App = () => {
       personServices
       .create(updatedPerson)
       .then(personData => {
+
+        setMessageType('succes')
+        setMessage(`Added ${newName} --- ${newNumber}`)
+        setTimeout(() => {
+          setMessage(null)        
+        }, 5000)
+
         setPersons(persons.concat(personData))
         setNewPersonsFilter(newPersonsFilter.concat(personData))
       })
@@ -62,7 +88,8 @@ const App = () => {
 
   const deleteOnePerson = (id) => {
 
-    personServices
+    if(window.confirm('Are you sure you want to delete?')){
+        personServices
       .deletePerson(id)
       .then(data => {
         console.log(`${id} eliminado correctamente`)
@@ -73,6 +100,7 @@ const App = () => {
         alert(`${id} was already deleted from server`)
         console.error('error', error)
       })
+    }
   }
 
 
@@ -94,6 +122,7 @@ const App = () => {
     <div>
       <h1>Phonebook</h1>
 
+      <Notification message={newMessage} result={newMessageType} />
       <Filter newFilter={newFilter} handleFilterChange={handleFilterChange} />
 
       <h2>Add a new</h2>
