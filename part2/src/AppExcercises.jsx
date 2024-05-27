@@ -27,7 +27,6 @@ const AppExcercises = () => {
 
         setShowCountry(false)
 
-
         const countriesByNameFiltered = countries.filter(countrie => countrie.name.common.toLowerCase().includes(newFilterValue.toLowerCase()))      
         setNewCountriesByName(countriesByNameFiltered)
     }
