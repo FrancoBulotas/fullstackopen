@@ -123,7 +123,7 @@ const App = () => {
       <h1>Phonebook</h1>
 
       <Notification message={newMessage} result={newMessageType} />
-      <Filter newFilter={newFilter} handleFilterChange={handleFilterChange} />
+      <Filter text={'filter shown with'} newFilter={newFilter} handleFilterChange={handleFilterChange} />
 
       <h2>Add a new</h2>
 

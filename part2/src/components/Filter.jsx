@@ -3,7 +3,7 @@
 const Filter = (props) => {
     return(
         <div>
-            filter shown with <input value={props.newFilter} onChange={props.handleFilterChange} />
+            {props.text} <input value={props.newFilter} onChange={props.handleFilterChange} />
         </div>
     )
 }
