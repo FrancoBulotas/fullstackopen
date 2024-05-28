@@ -6,10 +6,10 @@ import './index.css'
 import App from './App'
 import AppExcercises from './AppExcercises'
 
-// ReactDOM.createRoot(document.getElementById('root')).render(
-//   <App />
-// )
-
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <AppExcercises />
+  <App />
 )
+
+// ReactDOM.createRoot(document.getElementById('root')).render(
+//   <AppExcercises />
+// )
