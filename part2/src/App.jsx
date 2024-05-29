@@ -79,6 +79,13 @@ const App = () => {
         setPersons(persons.concat(personData))
         setNewPersonsFilter(newPersonsFilter.concat(personData))
       })
+      .catch(error => {
+        setMessageType('error')
+        setMessage(`${error.response.data.error}`)
+        setTimeout(() => {
+          setMessage(null)        
+        }, 5000)
+      })
     }
 
     setNewName('')
