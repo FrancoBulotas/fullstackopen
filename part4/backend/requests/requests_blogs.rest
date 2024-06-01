@@ -6,10 +6,11 @@ POST http://localhost:3003/api/blogs HTTP/1.1
 content-type: application/json
 
 {
-    "title": "Pruebiyasda",
-    "author": "Perez",
-    "url": "jddjdjjakajdskjd.com",
-    "likes": 1289
+    "title": "Perrito en cadenas",
+    "author": "nene",
+    "url": "epacuco.com",
+    "likes": 3000,
+    "userId": "665a63f76fccfe13e2b9baa2"
 }
 ###
 PUT http://localhost:3003/api/blogs/665a04f240157ef4d87a1950 HTTP/1.1
