@@ -6,9 +6,9 @@ POST http://localhost:3003/api/users HTTP/1.1
 content-type: application/json
 
 {
-    "username": "Locura",
-    "name": "Perez",
-    "password": "jddjdjjakajdskjd.com"
+    "username": "encima",
+    "name": "Lucas Rodriguez",
+    "password": "12"
 }
 ###
 PUT http://localhost:3003/api/users/ HTTP/1.1

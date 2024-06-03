@@ -1,0 +1,25 @@
+GET http://localhost:3003/api/blogs
+
+###
+DELETE http://localhost:3003/api/blogs/665d15ac80281f1f2fde2615
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvYWNvIiwiaWQiOiI2NjVkMDVmMjhhMTRhZjMyOTE2Mjg0M2YiLCJpYXQiOjE3MTczNzc2ODAsImV4cCI6MTcxNzM4MTI4MH0.WFzhsaQF_EkiPyM6j4mzfxls-vnkb7lq7mIbE4IOQxs
+
+###
+POST http://localhost:3003/api/blogs
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkZyYW5jb0J1bG90YXMiLCJpZCI6IjY2NWNmZDJjNjZlNGFlY2MwNzRjZmJiNyIsImlhdCI6MTcxNzM3NzYwNSwiZXhwIjoxNzE3MzgxMjA1fQ.k_MotBDw4Of-yXaat47IF18fyY8UenwAdq6awlbawXw
+
+{
+    "title": "perez 1248923",
+    "author": "Pepe Argento",
+    "url": "epacuco.com",
+    "likes": 44
+}
+###
+PUT http://localhost:3003/api/blogs/665a04f240157ef4d87a1950 HTTP/1.1
+content-type: application/json
+
+{
+    "author": "perito",
+    "url": "jpacuco.coard.com"
+}
