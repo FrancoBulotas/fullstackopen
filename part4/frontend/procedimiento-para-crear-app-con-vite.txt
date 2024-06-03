@@ -1,0 +1,5 @@
+
+Comandos
+
+// Crea e instala lo necesario para la app vite
+1.  npm create vite@latest "el nombre que quieras" --template react
