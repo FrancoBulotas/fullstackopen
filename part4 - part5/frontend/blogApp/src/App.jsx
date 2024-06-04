@@ -1,24 +1,23 @@
 
 
-import { useState, useEffect} from 'react'
+import { useState, useEffect, useRef} from 'react'
 import Blogs from './components/Blogs'
 import blogServices from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
 import LoginForm  from './components/LoginForm'
 import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [newTitle, setNewTitle] = useState('')
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newUrl, setNewUrl] = useState('')
-
   const [newMessage, setMessage] = useState(null)
   const [newMessageType, setMessageType] = useState(null)
   const [username, setUsername] = useState('')   
   const [password, setPassword] = useState('') 
   const [user, setUser] = useState(null)
+
+  const blogFormRef = useRef()
 
   useEffect(() => {
     blogServices
@@ -33,37 +32,30 @@ const App = () => {
     if (loggedUserJSON) {      
       const user = JSON.parse(loggedUserJSON)      
       setUser(user)      
-      blogServices.setToken(user.token)    }  }, [])
+      blogServices.setToken(user.token)    
+    }  
+  }, [])
 
-  const addBlog = async (event) => {
-    event.preventDefault()  
+  const deleteMessage = () => {
+    setTimeout(() => {        
+      setMessage(null)      
+    }, 5000) 
+  }
 
-    const newBlog = {
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl,
-      likes: Math.floor(Math.random()*1000),
-      user: user
-    }
-
+  const addBlog = async (newBlog) => {
     try {
+      blogFormRef.current.toggleVisibility()
       const response = await blogServices.create(newBlog)
       setBlogs(blogs.concat(response))
 
       setMessage(`a new blog: ${newBlog.title} by ${newBlog.author} added`)   
-      setTimeout(() => {        
-        setMessage(null)      
-      }, 5000) 
-      
+      deleteMessage()
     }
     catch (exception) {
-      setMessage(exception.message)   
+      setMessage('error: ', exception.message)   
       setMessageType('error')   
-      setTimeout(() => {        
-        setMessage(null)      
-      }, 5000) 
+      deleteMessage()
     }
-
   }
 
   const handleLogin = async (event) => {    
@@ -82,28 +74,45 @@ const App = () => {
       setUser(user)      
       setUsername('')      
       setPassword('')    
-    } catch (exception) {      
+    } 
+    catch (exception) {  
+      console.log(exception)    
       setMessage('Wrong credentials')   
       setMessageType('error')   
-      setTimeout(() => {        
-        setMessage(null)      
-      }, 5000)    
+      deleteMessage() 
     }
       
   }
 
-  const handleNewTitleChange = (event) => {
-    setNewTitle(event.target.value)
+  const loginForm = () => {
+    return (
+      <Togglable buttonLabel='Login'>
+        <LoginForm
+          username={username}
+          password={password}
+          setPassword={setPassword}
+          setUsername={setUsername}
+          handleLogin={handleLogin}
+        />
+      </Togglable>       
+    )
   }
 
-  const handleNewAuthorChange = (event) => {
-    setNewAuthor(event.target.value)
+  const blogForm = () => {
+    return (
+      <Togglable buttonLabel='New blog' ref={blogFormRef}>
+        <BlogForm 
+          createBlog={addBlog} 
+          user={user}
+        ></BlogForm>
+      </Togglable>
+    )
   }
 
-  const handleNewUrlChange = (event) => {
-    setNewUrl(event.target.value)
+  const signOut = () => {
+    window.localStorage.clear()
+    setUser(null)
   }
-
 
   return (
       <div>
@@ -111,20 +120,19 @@ const App = () => {
 
         <Notification message={newMessage} result={newMessageType} />
 
-        { user === null ? 
-          <LoginForm handleLogin={handleLogin} username={username} password={password} setPassword={setPassword} setUsername={setUsername} ></LoginForm> : 
-          <div>
-            <p>Logged as: {user.name}</p>
-            {<BlogForm addBlog={addBlog} 
-              newTitle={newTitle} handleNewTitleChange={handleNewTitleChange} 
-              newAuthor={newAuthor} handleNewAuthorChange={handleNewAuthorChange}
-              newUrl={newUrl} handleNewUrlChange={handleNewUrlChange}
-            ></BlogForm>}
-          </div> 
+
+        {
+        user === null ?
+        loginForm() : 
+        <div>
+          <div>Logged as: {user.name} <button onClick={() => signOut()}>logout</button></div><br />
+          {blogForm()}
+        </div>
         }
 
         <h2>blogs</h2>
         <Blogs blogs={blogs} ></Blogs>
+        
       </div>
   )
 }

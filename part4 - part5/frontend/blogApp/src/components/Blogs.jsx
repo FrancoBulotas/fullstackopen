@@ -1,11 +1,24 @@
 
+import Blog from './blog'
 
 const Blogs = (props) => {
+    const blogStyle = {
+        paddingTop: 10,
+        paddingLeft: 2,
+        border: 'solid',
+        borderWidth: 1,
+        borderRadius: 5,
+        marginBottom: 5
+    }
+
     return (
-        <ul>
+        <div>
             {props.blogs.map(blog => 
-                <li key={blog.id}>Name: {blog.title} // Likes: {blog.likes} // Author: {blog.author}</li>            )}
-        </ul>
+                <div style={blogStyle} key={blog.id}>
+                    <Blog title={blog.title} url={blog.url} like={blog.likes} author={blog.author}></Blog>
+                </div>
+            )}
+        </div>
     )
 }
 
