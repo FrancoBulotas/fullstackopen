@@ -16,10 +16,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkZyY
     "likes": 44
 }
 ###
-PUT http://localhost:3003/api/blogs/665a04f240157ef4d87a1950 HTTP/1.1
+PUT http://localhost:3003/api/blogs/665d054d8a14af3291628426 HTTP/1.1
 content-type: application/json
 
 {
-    "author": "perito",
-    "url": "jpacuco.coard.com"
+    
+    "likes": 10
 }

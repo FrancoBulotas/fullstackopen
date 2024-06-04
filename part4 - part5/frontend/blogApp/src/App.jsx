@@ -20,12 +20,12 @@ const App = () => {
   const blogFormRef = useRef()
 
   useEffect(() => {
-    blogServices
-      .getAll()
-      .then(blogData => {        
-        setBlogs(blogData)
-      })
-  }, [])
+    const fetchData = async () => {
+      const response = await blogServices.getAll()
+      setBlogs(response)
+    }
+    fetchData()
+  }, [blogs])
 
   useEffect(() => {    
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')    
@@ -131,8 +131,7 @@ const App = () => {
         }
 
         <h2>blogs</h2>
-        <Blogs blogs={blogs} ></Blogs>
-        
+        <Blogs blogs={blogs} user={user}></Blogs>  
       </div>
   )
 }
