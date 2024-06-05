@@ -49,10 +49,10 @@ const Blog = (props) => {
                 {buttonVisibility('hide')}
                 <div>{props.url}</div>
                 <div>{amountLikes}<button onClick={() => addOneLike(props.id)}>like</button></div>
-                <div>{props.username}</div>
+                <div>{props.blogUser.username}</div>
                 {
                 props.user !== null ? 
-                    props.user.username === props.username ?
+                    props.user.username === props.blogUser.username ?
                     <button onClick={() => removeBlog(props.id)}>remove</button> :
                     <div></div> :
                 <div></div>

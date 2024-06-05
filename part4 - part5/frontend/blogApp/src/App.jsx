@@ -120,7 +120,6 @@ const App = () => {
 
         <Notification message={newMessage} result={newMessageType} />
 
-
         {
         user === null ?
         loginForm() : 

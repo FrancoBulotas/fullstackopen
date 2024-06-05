@@ -7,7 +7,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvY
 ###
 POST http://localhost:3003/api/blogs
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkZyYW5jb0J1bG90YXMiLCJpZCI6IjY2NWNmZDJjNjZlNGFlY2MwNzRjZmJiNyIsImlhdCI6MTcxNzM3NzYwNSwiZXhwIjoxNzE3MzgxMjA1fQ.k_MotBDw4Of-yXaat47IF18fyY8UenwAdq6awlbawXw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkZyYW5jbyIsImlkIjoiNjY1ZmMxNGNiY2YxNmIxODM3ODk3ZjU4IiwiaWF0IjoxNzE3NTUxNDQ5LCJleHAiOjE3MTc1NTUwNDl9.hRiMYhBOl5zNBuKPwznSqLHC7TWEXpiG_bWSLviumYA
 
 {
     "title": "perez 1248923",
