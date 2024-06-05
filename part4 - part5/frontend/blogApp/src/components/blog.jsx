@@ -9,8 +9,9 @@ const Blog = (props) => {
 
     const [amountLikes, setAmountLikes] = useState(props.like)
 
-    const toggleVisibility = () => {
+    const toggleVisibility = async () => {
         setVisible(!visible)    
+        props.setBlogs(await blogServices.getAll())
     }
 
     const addOneLike = async (id) => {
@@ -28,7 +29,7 @@ const Blog = (props) => {
             if(window.confirm(`Are you sure you want to delete ${props.title}?`)){
                 blogServices.setToken(props.user.token)
                 await blogServices.deleteBlog(id)
-                
+                props.setBlogs(await blogServices.getAll())
             }
         }
         catch(exception){

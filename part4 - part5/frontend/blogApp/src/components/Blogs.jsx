@@ -23,6 +23,7 @@ const Blogs = (props) => {
                         author={blog.author} 
                         url={blog.url} 
                         like={blog.likes} 
+                        setBlogs={props.setBlogs}
                         blogUser={blog.user} 
                         user={props.user}
                         >

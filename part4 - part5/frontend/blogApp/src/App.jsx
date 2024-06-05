@@ -25,7 +25,7 @@ const App = () => {
       setBlogs(response)
     }
     fetchData()
-  }, [blogs])
+  }, [])
 
   useEffect(() => {    
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')    
@@ -130,7 +130,7 @@ const App = () => {
         }
 
         <h2>blogs</h2>
-        <Blogs blogs={blogs} user={user}></Blogs>  
+        <Blogs blogs={blogs} user={user} setBlogs={setBlogs}></Blogs>  
       </div>
   )
 }
