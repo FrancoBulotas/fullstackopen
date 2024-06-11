@@ -1,6 +1,6 @@
 
 
-import { useState, useEffect, useRef} from 'react'
+import { useState, useEffect} from 'react'
 import Blogs from './components/Blogs'
 import blogServices from './services/blogs'
 import loginService from './services/login'
@@ -8,24 +8,25 @@ import Notification from './components/Notification'
 import LoginForm  from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
+import { setNotification } from './reducers/notificationReducer'
+import { initializeBlogs } from './reducers/blogsReducer'
+import { useDispatch } from 'react-redux'
+
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
-  const [newMessage, setMessage] = useState(null)
-  const [newMessageType, setMessageType] = useState(null)
+  // const [blogss, setBlogs] = useState([])
   const [username, setUsername] = useState('')   
   const [password, setPassword] = useState('') 
   const [user, setUser] = useState(null)
 
-  const blogFormRef = useRef()
+  const dispatch = useDispatch()
+
+  // const blogFormRef = useRef()
 
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await blogServices.getAll()
-      setBlogs(response)
-    }
-    fetchData()
+      dispatch(initializeBlogs())
   }, [])
+  
 
   useEffect(() => {    
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')    
@@ -35,28 +36,6 @@ const App = () => {
       blogServices.setToken(user.token)    
     }  
   }, [])
-
-  const deleteMessage = () => {
-    setTimeout(() => {        
-      setMessage(null)      
-    }, 5000) 
-  }
-
-  const addBlog = async (newBlog) => {
-    try {
-      blogFormRef.current.toggleVisibility()
-      const response = await blogServices.create(newBlog)
-      setBlogs(blogs.concat(response))
-
-      setMessage(`a new blog: ${newBlog.title} by ${newBlog.author} added`)   
-      deleteMessage()
-    }
-    catch (exception) {
-      setMessage('error: ', exception.message)   
-      setMessageType('error')   
-      deleteMessage()
-    }
-  }
 
   const handleLogin = async (event) => {    
     event.preventDefault()  
@@ -77,9 +56,7 @@ const App = () => {
     } 
     catch (exception) {  
       console.log(exception)    
-      setMessage('Wrong credentials')   
-      setMessageType('error')   
-      deleteMessage() 
+      dispatch(setNotification({message:'Wrong credentials', error: true }, 5))
     }
       
   }
@@ -98,17 +75,6 @@ const App = () => {
     )
   }
 
-  const blogForm = () => {
-    return (
-      <Togglable buttonLabel='New blog' ref={blogFormRef}>
-        <BlogForm 
-          createBlog={addBlog} 
-          user={user}
-        ></BlogForm>
-      </Togglable>
-    )
-  }
-
   const signOut = () => {
     window.localStorage.clear()
     setUser(null)
@@ -118,19 +84,18 @@ const App = () => {
       <div>
         <h1>Blogs App</h1>
 
-        <Notification message={newMessage} result={newMessageType} />
+        <Notification />
 
         {
         user === null ?
         loginForm() : 
         <div>
           <div>Logged as: {user.name} <button onClick={() => signOut()}>logout</button></div><br />
-          {blogForm()}
+          {<BlogForm user={user} />}
         </div>
         }
 
-        <h2>blogs</h2>
-        <Blogs blogs={blogs} user={user} setBlogs={setBlogs}></Blogs>  
+        <Blogs user={user} />  
       </div>
   )
 }

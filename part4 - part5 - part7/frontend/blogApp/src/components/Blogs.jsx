@@ -1,7 +1,14 @@
 
 import Blog from './Blog'
+import { useDispatch, useSelector } from 'react-redux'
 
-const Blogs = (props) => {
+const Blogs = ({user}) => {
+
+    const blogs = useSelector(state => state.blogs)
+    
+    const dispatch = useDispatch()
+
+
     const blogStyle = {
         paddingTop: 10,
         paddingLeft: 2,
@@ -11,11 +18,13 @@ const Blogs = (props) => {
         marginBottom: 5
     }
 
-    props.blogs.sort((a, b) => b.likes - a.likes) // ordena de mayor a menor
+    
+    // blogs.sort((a, b) => b.likes - a.likes) // ordena de mayor a menor
 
     return (
         <div>
-            {props.blogs.map(blog => 
+            <h2>blogs</h2>
+            {blogs.map(blog => 
                 <div style={blogStyle} key={blog.id}>
                     <Blog 
                         id={blog.id} 
@@ -23,9 +32,8 @@ const Blogs = (props) => {
                         author={blog.author} 
                         url={blog.url} 
                         like={blog.likes} 
-                        setBlogs={props.setBlogs}
                         blogUser={blog.user} 
-                        user={props.user}
+                        user={user}
                         >
                     </Blog>
                 </div>
