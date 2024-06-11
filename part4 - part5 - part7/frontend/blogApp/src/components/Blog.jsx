@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import blogServices from '../services/blogs'
 import { useDispatch } from 'react-redux'
-import { addNewLike, initializeBlogs, getAmountLikes } from '../reducers/blogsReducer'
+import { initializeBlogs } from '../reducers/blogsReducer'
 
 const Blog = (props) => {
     const [visible, setVisible] = useState(false)
@@ -14,27 +14,18 @@ const Blog = (props) => {
 
     const toggleVisibility = async () => {
         setVisible(!visible)    
-        // props.setBlogs(await blogServices.getAll())
         dispatch(initializeBlogs())
-    }
-
-    const getLikes = async () => {
-        const likes = await getAmountLikes(props.id)
-        console.log(likes)
-        return likes
     }
 
     const addOneLike = async (id) => {
         try{
-            // const response = await blogServices.update(id, {"likes" : amountLikes + 1})
-            // setAmountLikes(response.likes)
-            const blog = await blogServices.getById(id)
-            dispatch(addNewLike(id, {'likes' : blog.likes + 1} ))
+            const response = await blogServices.update(id, {"likes" : amountLikes + 1})
+            setAmountLikes(response.likes)
+            dispatch(initializeBlogs())
         }
         catch(exception){
             console.error(exception)
         }
-        
     }
 
     const removeBlog = async (id) => {
@@ -42,7 +33,6 @@ const Blog = (props) => {
             if(window.confirm(`Are you sure you want to delete ${props.title}?`)){
                 blogServices.setToken(props.user.token)
                 await blogServices.deleteBlog(id)
-                // props.setBlogs(await blogServices.getAll())
                 dispatch(initializeBlogs())
             }
         }
@@ -63,7 +53,7 @@ const Blog = (props) => {
             <div style={showWhenVisible}>
                 {buttonVisibility('hide')}
                 <div>{props.url}</div>
-                <div>{getLikes()}<button onClick={() => addOneLike(props.id)}>like</button></div>
+                <div>{amountLikes}<button onClick={() => addOneLike(props.id)}>like</button></div>
                 <div>{props.blogUser.username}</div>
                 {
                 props.user !== null ? 

@@ -2,12 +2,11 @@
 import Blog from './Blog'
 import { useDispatch, useSelector } from 'react-redux'
 
-const Blogs = ({user}) => {
-
+const Blogs = () => {
+    const user = useSelector(state => state.login)
     const blogs = useSelector(state => state.blogs)
     
     const dispatch = useDispatch()
-
 
     const blogStyle = {
         paddingTop: 10,
@@ -17,9 +16,6 @@ const Blogs = ({user}) => {
         borderRadius: 5,
         marginBottom: 5
     }
-
-    
-    // blogs.sort((a, b) => b.likes - a.likes) // ordena de mayor a menor
 
     return (
         <div>

@@ -7,16 +7,14 @@ import blogServices from '../services/blogs'
 import Togglable from './Togglable'
 
 
-const BlogForm = ({user}) => {
-  
+const BlogForm = () => {
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
-
+ 
+  const user = useSelector(state => state.login)
   const dispatch = useDispatch()
-
   const blogFormRef = useRef()
-
 
   const addBlog = async (event) => {
     event.preventDefault()  
@@ -39,7 +37,6 @@ const BlogForm = ({user}) => {
     catch (exception) {
       dispatch(setNotification({message: `error:  ${exception.message}`, error: true }, 5))
     }
-    // createBlog(newBlog)
   }
   
   return (
