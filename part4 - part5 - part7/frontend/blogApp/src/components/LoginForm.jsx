@@ -7,12 +7,14 @@ import loginService from '../services/login'
 import blogServices from '../services/blogs'
 import { setNotification } from '../reducers/notificationReducer'
 import { setUser } from '../reducers/loginReducer'
+import { useNavigate } from 'react-router-dom'
 
 const LoginForm = () => {
   const [username, setUsername] = useState('')   
   const [password, setPassword] = useState('') 
 
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const handleLogin = async (event) => {    
     event.preventDefault()  
@@ -28,6 +30,7 @@ const LoginForm = () => {
   
       blogServices.setToken(user.token)
       dispatch(setUser(user))     
+      navigate('/')
       setUsername('')      
       setPassword('')    
     } 
@@ -40,7 +43,7 @@ const LoginForm = () => {
 
   return (
   <div>
-    <Togglable buttonLabel='Login'>
+    {/* <Togglable buttonLabel='Login'> */}
       <h2>Login</h2>
       <form onSubmit={handleLogin}>    
         <div>          
@@ -63,7 +66,7 @@ const LoginForm = () => {
         </div>        
         <button type="submit">login</button>      
       </form>
-    </Togglable>
+    {/* </Togglable> */}
   </div>
   )}
 

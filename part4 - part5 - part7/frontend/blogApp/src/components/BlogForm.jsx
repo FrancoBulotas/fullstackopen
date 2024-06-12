@@ -1,10 +1,11 @@
 
 import { useState, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { appendBlog } from '../reducers/blogsReducer'
+import { appendBlog, initializeBlogs } from '../reducers/blogsReducer'
 import { setNotification } from '../reducers/notificationReducer'
 import blogServices from '../services/blogs'
 import Togglable from './Togglable'
+import { useNavigate } from 'react-router-dom'
 
 
 const BlogForm = () => {
@@ -15,6 +16,7 @@ const BlogForm = () => {
   const user = useSelector(state => state.login)
   const dispatch = useDispatch()
   const blogFormRef = useRef()
+  const navigate = useNavigate()
 
   const addBlog = async (event) => {
     event.preventDefault()  
@@ -24,14 +26,16 @@ const BlogForm = () => {
       author: newAuthor,
       url: newUrl,
       likes: Math.floor(Math.random()*1000),
-      user: user
+      user: user,
+      comments: []
     }
 
     try {
       blogFormRef.current.toggleVisibility()
       const response = await blogServices.create(newBlog)
       dispatch(appendBlog(response))
-
+      dispatch(initializeBlogs())
+      navigate('/')
       dispatch(setNotification({message: `a new blog: ${newBlog.title} by ${newBlog.author} added`, error: false}, 5))
     }
     catch (exception) {

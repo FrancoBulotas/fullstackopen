@@ -10,11 +10,11 @@ const blogSlice = createSlice({
     appendBlog(state, action) {
       state.push(action.payload)
     },
-    addLike(state, action) {
-      const blogChanged = action.payload
-      console.log(blogChanged)
-      return state.map(blog => blog.id !== action.payload.id ? blog : blogChanged).sort((a, b) => b.likes - a.likes)
-    },
+    // addLike(state, action) {
+    //   const blogChanged = action.payload
+    //   console.log(blogChanged)
+    //   return state.map(blog => blog.id !== action.payload.id ? blog : blogChanged).sort((a, b) => b.likes - a.likes)
+    // },
     setBlogs(state, action) { 
       return action.payload
     }
@@ -37,5 +37,5 @@ export const createBlog = content => {
 }
 
 
-export const { appendBlog, addLike, setBlogs } = blogSlice.actions
+export const { appendBlog,  setBlogs } = blogSlice.actions
 export default blogSlice.reducer

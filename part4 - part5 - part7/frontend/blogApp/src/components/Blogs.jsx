@@ -1,12 +1,10 @@
 
-import Blog from './Blog'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
+import BlogForm from './BlogForm'
 
 const Blogs = () => {
-    const user = useSelector(state => state.login)
     const blogs = useSelector(state => state.blogs)
-    
-    const dispatch = useDispatch()
 
     const blogStyle = {
         paddingTop: 10,
@@ -19,19 +17,12 @@ const Blogs = () => {
 
     return (
         <div>
-            <h2>blogs</h2>
+            <BlogForm />
             {blogs.map(blog => 
                 <div style={blogStyle} key={blog.id}>
-                    <Blog 
-                        id={blog.id} 
-                        title={blog.title} 
-                        author={blog.author} 
-                        url={blog.url} 
-                        like={blog.likes} 
-                        blogUser={blog.user} 
-                        user={user}
-                        >
-                    </Blog>
+                    <Link to={`/blogs/${blog.id}`}>
+                        {blog.title}
+                    </Link>
                 </div>
             )}
         </div>

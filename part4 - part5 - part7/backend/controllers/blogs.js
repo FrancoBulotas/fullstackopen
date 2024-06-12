@@ -37,7 +37,8 @@ blogRouter.post('/', async (request, response) => {
     author: body.author,
     url: body.url,
     likes: body.likes,
-    user: user.id
+    user: user.id,
+    comments: body.comments
   })
 
   const savedBlog = await blog.save()
@@ -45,8 +46,9 @@ blogRouter.post('/', async (request, response) => {
   await user.save()
 
   response.status(201).json(savedBlog)
-
 })
+
+
 
 blogRouter.delete('/:id', async (request, response) => {
   const blog = await Blog.findById(request.params.id)
@@ -64,11 +66,22 @@ blogRouter.delete('/:id', async (request, response) => {
 })
 
 blogRouter.put('/:id', async (request, response) => {
-  const {title, author, url, likes, user} = request.body
+  const {title, author, url, likes, user, comments} = request.body
 
   response.json(await Blog.findByIdAndUpdate(request.params.id,
-    {title, author, url, likes, user}, 
+    {title, author, url, likes, user, comments}, 
     { new: true, runValidators: true, context: 'query' }))
 })
+
+// blogRouter.put('/:id/comments', async (request, response) => {
+//   const body = request.body
+//   console.log(body)
+//   const blog = await Blog.findById(request.params.id)
+
+//   blog.comments = blog.comments.concat(body)
+//   await blog.save()
+
+//   response.status(201).json(blog)
+// })
 
 module.exports = blogRouter

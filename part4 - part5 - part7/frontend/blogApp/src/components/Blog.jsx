@@ -3,19 +3,18 @@ import { useState } from 'react'
 import blogServices from '../services/blogs'
 import { useDispatch } from 'react-redux'
 import { initializeBlogs } from '../reducers/blogsReducer'
+import { useNavigate } from 'react-router-dom'
 
-const Blog = (props) => {
-    const [visible, setVisible] = useState(false)
-    const hideWhenVisible = { display: visible ? 'none' : '' }
-    const showWhenVisible = { display: visible ? '' : 'none' }
+const Blog = ({blog, user}) => {
 
-    const [amountLikes, setAmountLikes] = useState(props.like)
+    if(!user || !blog) {
+        return null
+    }
+    const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const toggleVisibility = async () => {
-        setVisible(!visible)    
-        dispatch(initializeBlogs())
-    }
+    const [amountLikes, setAmountLikes] = useState(blog.likes)
+    const [comment, setComment] = useState('')
 
     const addOneLike = async (id) => {
         try{
@@ -30,9 +29,10 @@ const Blog = (props) => {
 
     const removeBlog = async (id) => {
         try {
-            if(window.confirm(`Are you sure you want to delete ${props.title}?`)){
-                blogServices.setToken(props.user.token)
+            if(window.confirm(`Are you sure you want to delete ${blog.title}?`)){
+                blogServices.setToken(user.token)
                 await blogServices.deleteBlog(id)
+                navigate('/')
                 dispatch(initializeBlogs())
             }
         }
@@ -41,28 +41,45 @@ const Blog = (props) => {
         }
     }
 
-    const buttonVisibility = (text) => (
-        <div>{props.title} by {props.author}<button onClick={toggleVisibility}>{text}</button></div>
-    )
+    const addComment = async (e) => {
+        e.preventDefault()
+
+        try{
+            await blogServices.update(blog.id, {"comments": blog.comments.concat(comment)})
+            setComment('')
+            dispatch(initializeBlogs())
+        }
+        catch(exception){
+            console.error('error: ', exception)
+        }
+
+    }
 
     return (
         <div>
-            <div style={hideWhenVisible}>
-                {buttonVisibility('view')}
-            </div>
-            <div style={showWhenVisible}>
-                {buttonVisibility('hide')}
-                <div>{props.url}</div>
-                <div>{amountLikes}<button onClick={() => addOneLike(props.id)}>like</button></div>
-                <div>{props.blogUser.username}</div>
-                {
-                props.user !== null ? 
-                    props.user.username === props.blogUser.username ?
-                    <button onClick={() => removeBlog(props.id)}>remove</button> :
-                    <div></div> :
-                <div></div>
-                }
-            </div>
+            <h2>{blog.title}</h2>
+            <div>{blog.url}</div>
+            <div>{amountLikes}<button onClick={() => addOneLike(blog.id)}>like</button></div>
+            <div>{blog.user.username}</div>
+            {
+            blog.user !== null ? 
+                user.username === blog.user.username ?
+                <button onClick={() => removeBlog(blog.id)}>remove</button> :
+                <div></div> :
+            <div></div>
+            }
+            <br />
+            <h3>comments</h3>
+            <form onSubmit={addComment} style={{display: 'flex'}}>
+                <div><input value={comment} onChange={event => setComment(event.target.value)} /></div>
+                <button type='sumbit'>add comment</button>
+            </form>
+            <ul>
+                {blog.comments.map((comment, i) => 
+                    <li key={i}>{comment}</li>
+                )}                
+            </ul>
+            
         </div>
     )
 }
