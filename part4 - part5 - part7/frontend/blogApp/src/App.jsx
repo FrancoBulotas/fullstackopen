@@ -14,20 +14,11 @@ import Users from './components/Users'
 import User from './components/User'
 import { Routes, Route, useMatch, useNavigate } from 'react-router-dom'
 
-import { createSelector } from 'reselect';
-
-const selectUsers = state => state.users
-const selectFilter = state => 'root'
-const selectFilteredUsers = createSelector(
-  [selectUsers, selectFilter],
-  (users, filter) => {
-    return users.filter(user => user.username !== 'root')
-  }
-)
 
 const App = () => {
-  // const users = useSelector(state => state.users.filter(user => user.username !== 'root'))
-  const users = useSelector(selectFilteredUsers)
+  const usersNonFiltered = useSelector(state => state.users)
+  const users = usersNonFiltered.filter(user => user.username !== 'root')
+  // const users = useSelector(selectFilteredUsers)
   const blogs = useSelector(state => state.blogs)
   const userLogged = useSelector(state => state.login)
   const dispatch = useDispatch()
@@ -57,7 +48,7 @@ const App = () => {
   }, [])
 
   return (
-      <div>
+      <div className="container">
         <Menu />
         <h1>Blogs App</h1>
         <Notification />

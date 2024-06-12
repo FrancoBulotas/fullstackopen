@@ -3,20 +3,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Table } from 'react-bootstrap'
 
-import { createSelector } from 'reselect';
-
-const selectUsers = state => state.users
-const selectFilter = state => 'root'
-const selectFilteredUsers = createSelector(
-  [selectUsers, selectFilter],
-  (users, filter) => {
-    return users.filter(user => user.username !== 'root')
-  }
-)
-
 const Users = () => {
+    // const users = useSelector(state => state.users.filter(user => user.username !== 'root'))
+    const usersNonFiltered = useSelector(state => state.users)
+    const users = usersNonFiltered.filter(user => user.username !== 'root')
     
-    const users = useSelector(selectFilteredUsers)
+    // const users = useSelector(selectFilteredUsers)
 
     return (
         <div>

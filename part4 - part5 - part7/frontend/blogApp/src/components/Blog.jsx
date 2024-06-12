@@ -10,12 +10,13 @@ const Blog = ({blog, user}) => {
     if(!user || !blog) {
         return null
     }
+    
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
     const [amountLikes, setAmountLikes] = useState(blog.likes)
     const [comment, setComment] = useState('')
-
+   
     const addOneLike = async (id) => {
         try{
             const response = await blogServices.update(id, {"likes" : amountLikes + 1})
